@@ -1,0 +1,25 @@
+name: 'meesho_warehouse'
+version: '1.0.0'
+config-version: 2
+
+# The profile is defined in the project-local profiles.yml, so dbt finds it when you run
+# from the repo root — no ~/.dbt setup needed.
+profile: 'meesho_warehouse'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Staging is thin and logic-free, so views. Marts are the star schema you query, so tables.
+# These are defaults — a model can override with a config() block.
+models:
+  meesho_warehouse:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

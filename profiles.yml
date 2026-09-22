@@ -1,0 +1,10 @@
+# Project-local profile. dbt (1.5+) reads a profiles.yml from the working directory, so
+# running any dbt command from the repo root just works — there is nothing to configure in
+# ~/.dbt. The warehouse is a single local DuckDB file; delete it and `dbt build` rebuilds it.
+meesho_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'meesho.duckdb'
+      threads: 4
