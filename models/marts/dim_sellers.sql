@@ -1,0 +1,8 @@
+select
+    md5(seller_id) as seller_key,
+    seller_id,
+    seller_zip_code_prefix,
+    seller_city,
+    seller_state
+from {{ ref('stg_sellers') }}
+qualify row_number() over (partition by seller_id order by seller_id) = 1
