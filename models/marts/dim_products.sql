@@ -10,4 +10,4 @@ select
     product_height_cm,
     product_width_cm
 from {{ ref('stg_products') }}
-qualify row_number() over (partition by product_id) = 1
+qualify row_number() over (partition by product_id order by product_id) = 1

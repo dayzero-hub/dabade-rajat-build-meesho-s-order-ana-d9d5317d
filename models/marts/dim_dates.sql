@@ -23,6 +23,7 @@ select
     day(date_day)                     as day_of_month,
     dayofweek(date_day)               as day_of_week,
     dayname(date_day)                 as day_name,
+    -- DuckDB dayofweek(): 0 = Sunday ... 6 = Saturday
     dayofweek(date_day) in (0, 6)     as is_weekend,
     strftime(date_day, '%Y-%m')       as year_month
 from days

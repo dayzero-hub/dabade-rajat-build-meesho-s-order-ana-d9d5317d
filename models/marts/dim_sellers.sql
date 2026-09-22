@@ -5,4 +5,4 @@ select
     seller_city,
     seller_state
 from {{ ref('stg_sellers') }}
-qualify row_number() over (partition by seller_id) = 1
+qualify row_number() over (partition by seller_id order by seller_id) = 1
