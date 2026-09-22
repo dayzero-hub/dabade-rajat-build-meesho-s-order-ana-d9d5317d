@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: raw
+    description: The seven Olist CSVs loaded by `dbt seed` into the default DuckDB schema.
+    schema: main
+    tables:
+      - name: olist_orders_dataset
+        description: One row per order, with the status and the delivery timestamps.
+      - name: olist_order_items_dataset
+        description: One row per order line (order_id + order_item_id).
+      - name: olist_customers_dataset
+        description: One row per order-customer; customer_unique_id identifies the real person.
+      - name: olist_sellers_dataset
+        description: One row per seller.
+      - name: olist_products_dataset
+        description: One row per product.
+      - name: olist_order_payments_dataset
+        description: One row per payment on an order (an order can have several).
+      - name: olist_order_reviews_dataset
+        description: One row per review left on an order.
