@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: One row per real person (customer_unique_id), with the address from their most recent order.
+    columns:
+      - name: customer_key
+        description: Surrogate key, md5 of customer_unique_id.
+      - name: customer_unique_id
+        description: The real-person id from the raw customers table.
+  - name: dim_sellers
+    description: One row per seller.
+    columns:
+      - name: seller_key
+        description: Surrogate key, md5 of seller_id.
+  - name: dim_products
+    description: One row per product, with its category and physical dimensions.
+    columns:
+      - name: product_key
+        description: Surrogate key, md5 of product_id.
+  - name: dim_dates
+    description: One row per calendar day covering the order date range, with year / quarter / month / week / weekday grouping columns.
+    columns:
+      - name: date_key
+        description: Surrogate key, the date as an integer yyyymmdd.
