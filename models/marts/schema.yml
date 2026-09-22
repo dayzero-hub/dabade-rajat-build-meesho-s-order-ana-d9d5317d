@@ -53,3 +53,27 @@ models:
         tests:
           - not_null
           - unique
+  - name: fct_order_items
+    description: One row per order line (order_id + order_item_id) with foreign keys to every dimension and the additive measures price and freight_value. Non-delivered orders are kept with null delivery measures.
+    columns:
+      - name: order_item_key
+        description: Surrogate key, md5 of order_id and order_item_id.
+        tests:
+          - not_null
+          - unique
+      - name: customer_key
+        description: FK to dim_customers (the real person behind the order).
+      - name: seller_key
+        description: FK to dim_sellers.
+      - name: product_key
+        description: FK to dim_products.
+      - name: purchase_date_key
+        description: FK to dim_dates, the day the order was placed.
+      - name: price
+        description: Line price in the marketplace currency, additive.
+      - name: freight_value
+        description: Freight charged for this line, additive.
+      - name: delivery_days
+        description: Whole days from purchase to delivery to the customer; null unless the order was delivered.
+      - name: delivered_late
+        description: True when delivered after the estimated delivery date; null unless the order was delivered.
