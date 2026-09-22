@@ -6,73 +6,92 @@ models:
     columns:
       - name: customer_key
         description: Surrogate key, md5 of customer_unique_id.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
       - name: customer_unique_id
         description: The real-person id from the raw customers table.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
+
   - name: dim_sellers
     description: One row per seller.
     columns:
       - name: seller_key
         description: Surrogate key, md5 of seller_id.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
       - name: seller_id
         description: Natural key.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
+
   - name: dim_products
     description: One row per product, with its category and physical dimensions.
     columns:
       - name: product_key
         description: Surrogate key, md5 of product_id.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
       - name: product_id
         description: Natural key.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
+
   - name: dim_dates
     description: One row per calendar day covering the order date range, with year / quarter / month / week / weekday grouping columns.
     columns:
       - name: date_key
         description: Surrogate key, the date as an integer yyyymmdd.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
       - name: date_day
         description: Natural key.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
+
   - name: fct_order_items
     description: One row per order line (order_id + order_item_id) with foreign keys to every dimension and the additive measures price and freight_value. Non-delivered orders are kept with null delivery measures.
     columns:
       - name: order_item_key
         description: Surrogate key, md5 of order_id and order_item_id.
-        tests:
-          - not_null
-          - unique
+        tests: [not_null, unique]
       - name: customer_key
         description: FK to dim_customers (the real person behind the order).
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_key
       - name: seller_key
         description: FK to dim_sellers.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_sellers')
+                field: seller_key
       - name: product_key
         description: FK to dim_products.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_key
       - name: purchase_date_key
         description: FK to dim_dates, the day the order was placed.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dates')
+                field: date_key
+      - name: order_status
+        description: Status of the parent order, carried onto every line.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'invoiced', 'processing', 'unavailable', 'approved', 'created']
       - name: price
         description: Line price in the marketplace currency, additive.
+        tests: [not_null]
       - name: freight_value
         description: Freight charged for this line, additive.
+        tests: [not_null]
       - name: delivery_days
         description: Whole days from purchase to delivery to the customer; null unless the order was delivered.
       - name: delivered_late

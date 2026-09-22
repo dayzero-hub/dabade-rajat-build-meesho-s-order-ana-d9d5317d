@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: One row per order — cleaned and typed copy of the raw orders table.
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: order_status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'invoiced', 'processing', 'unavailable', 'approved', 'created']
+  - name: stg_order_items
+    description: One row per order line — cleaned and typed copy of the raw order items table.
+    columns:
+      - name: order_id
+        tests: [not_null]
+      - name: order_item_id
+        tests: [not_null]
+  - name: stg_customers
+    description: One row per order-customer; carries both the per-order customer_id and the real-person customer_unique_id.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: customer_unique_id
+        tests: [not_null]
+  - name: stg_sellers
+    description: One row per seller — cleaned and typed copy of the raw sellers table.
+    columns:
+      - name: seller_id
+        tests: [not_null, unique]
+  - name: stg_products
+    description: One row per product — cleaned and typed copy of the raw products table.
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+  - name: stg_order_payments
+    description: One row per payment against an order — cleaned and typed copy of the raw payments table.
+    columns:
+      - name: order_id
+        tests: [not_null]
+      - name: payment_sequential
+        tests: [not_null]
+  - name: stg_order_reviews
+    description: One row per review — cleaned and typed copy of the raw reviews table. review_id is NOT unique in the source (the same review can be attached to several orders).
+    columns:
+      - name: review_id
+        tests: [not_null]
+      - name: order_id
+        tests: [not_null]
